@@ -1,7 +1,7 @@
 """
 @author: Daniel Elisabethsønn Antonsen, UiT Institute of Physics and Technology
 
-Main module assignment
+Main file for assignment
 """
 # Importing libraries and modules
 import os
