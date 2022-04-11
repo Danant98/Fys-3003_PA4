@@ -21,7 +21,7 @@ nO2 = None
 nO = None
 nN2 = None
 ne = iriFile[:, 1:2]
-print(height)
+#print(height)
 
 
 
