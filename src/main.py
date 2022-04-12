@@ -16,12 +16,15 @@ def openData(filename):
 msisFile = openData("MSIS.dat")
 iriFile = openData("IRI.dat")
 # Loading data for height and densities
-height = msisFile[:, 0:1]
-nO2 = None
-nO = None
-nN2 = None
-ne = iriFile[:, 1:2]
+height = msisFile[:, 0:1] # Height, km
+ne = iriFile[:, 1:2] # Electron density, m^(-3)
+nO2 = msisFile[:, 3:4] # 
+nO = msisFile[:, 1:2]
+nN2 = msisFile[:, 2:3]
+temperature = msisFile[:, 3:4]
 
 
 
 
+if __name__ == '__main__':
+    pass
