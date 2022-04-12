@@ -27,7 +27,8 @@ temperature = msisFile[:, 5:6] # Temperature, K
 
 # Defining the time using numpy array
 t = np.arange(0, 3600, 1) # Time, s
-
+ # Radiative recombination-rate, (m^3)/s
+radiativeRecRate = 3.7E-18 * (250 / temperature)**(0.7)
 
 
 
