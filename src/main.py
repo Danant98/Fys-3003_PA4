@@ -18,13 +18,13 @@ iriFile = openData("IRI.dat")
 # Loading data for height and densities
 height = msisFile[:, 0:1] # Height, km
 ne = iriFile[:, 1:2] # Electron density, m^(-3)
-nO2 = msisFile[:, 3:4] # 
-nO = msisFile[:, 1:2]
-nN2 = msisFile[:, 2:3]
-temperature = msisFile[:, 3:4]
+nO2 = msisFile[:, 3:4] # Number density of molecular oxygen, cm^(-3)
+nO = msisFile[:, 1:2] # Number density of atomic oxygen, cm^(-3)
+nN2 = msisFile[:, 2:3] # Number density of molecular nitrogen, cm^(-3)
+temperature = msisFile[:, 5:6] # Temperature, K
 
 
 
 
 if __name__ == '__main__':
-    pass
+    print(temperature)
