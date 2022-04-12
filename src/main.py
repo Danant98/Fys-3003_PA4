@@ -29,6 +29,12 @@ temperature = msisFile[:, 5:6] # Temperature, K
 t = np.arange(0, 3600, 1) # Time, s
  # Radiative recombination-rate, (m^3)/s
 radiativeRecRate = 3.7E-18 * (250 / temperature)**(0.7)
+# Defining reaction rates, (m^3)/s
+alpha1 = 2.1E-13 * (temperature / 300)**(-0.85)
+alpha2 = 1.9E-13 * (temperature / 300)**(-0.5)
+alpha3 = 1.8E-13 * (temperature / 300)**(-0.39)
+
+
 
 
 
