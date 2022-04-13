@@ -46,7 +46,7 @@ alpha3 = 1.8E-13 * (temperature / 300)**(-0.39)
 ionRate = 1E8 
 # Defining the average alpha
 avgAlpha = (alpha1 * (ionNO / ne) + alpha2 * (ionO2 / ne) + alpha3 * (nN2 / ne))
-# 
+# Integrating 
 print(len(avgAlpha))
 print(len(t))
 exit()
