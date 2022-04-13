@@ -7,6 +7,7 @@ Main file for assignment
 import os
 import numpy as np
 import scipy as sp
+import scipy.integrate as integral 
 import matplotlib.pyplot as plt
 # Opening files
 def openData(filename):
@@ -33,7 +34,7 @@ radiativeRecRate = 3.7E-18 * (250 / temperature)**(0.7)
 alpha1 = 2.1E-13 * (temperature / 300)**(-0.85)
 alpha2 = 1.9E-13 * (temperature / 300)**(-0.5)
 alpha3 = 1.8E-13 * (temperature / 300)**(-0.39)
-
+# 
 
 
 
