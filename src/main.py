@@ -19,12 +19,12 @@ def openData(filename):
 msisFile = openData("MSIS.dat")
 iriFile = openData("IRI.dat")
 # Loading data for height and densities
-height = msisFile[:, 0:1] # Height, km
+height = msisFile[100:, 0:1] # Height, km
 ne = iriFile[:, 1:2] # Electron number density, m^(-3)
-nO2 = msisFile[:, 3:4] * (1/1E6) # Number density of molecular oxygen, m^(-3)
-nO = msisFile[:, 1:2] * (1/1E6) # Number density of atomic oxygen, m^(-3)
-nN2 = msisFile[:, 2:3] * (1/1E6) # Number density of molecular nitrogen, m^(-3)
-temperature = msisFile[:, 5:6] # Neutral temperature, K
+nO2 = msisFile[100:, 3:4] * (1/1E6) # Number density of molecular oxygen, m^(-3)
+nO = msisFile[100:, 1:2] * (1/1E6) # Number density of atomic oxygen, m^(-3)
+nN2 = msisFile[100:, 2:3] * (1/1E6) # Number density of molecular nitrogen, m^(-3)
+temperature = msisFile[100:, 5:6] # Neutral temperature, K
 ionTemp = iriFile[:, 2:3] # Ion temperature, K
 electronTemp = iriFile[:, 3:4] # Electron temperature, K
 # Loading the amount of ions
@@ -42,10 +42,15 @@ radiativeRecRate = 3.7E-18 * (250 / temperature)**(0.7)
 alpha1 = 2.1E-13 * (temperature / 300)**(-0.85)
 alpha2 = 1.9E-13 * (temperature / 300)**(-0.5)
 alpha3 = 1.8E-13 * (temperature / 300)**(-0.39)
+# Constant ionization-rate (/m^3/s)
+ionRate = 1E8 
 # Defining the average alpha
-#avgAlpha = (alpha1 * ())
+avgAlpha = (alpha1 * (ionNO / ne) + alpha2 * (ionO2 / ne) + alpha3 * (nN2 / ne))
 # 
-
+print(len(avgAlpha))
+print(len(t))
+exit()
+nee = integral.cumulative_trapezoid(ionRate - avgAlpha * (ne)(ne), t)
 
 
 
