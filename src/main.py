@@ -52,7 +52,7 @@ def solveDiff(i, time):
     alpha2 = 1.9E-13 * (electronTemp[i] / 300)**(-0.5)
     alpha3 = 1.8E-13 * (electronTemp[i] / 300)**(-0.39)
     # Defining the average alpha
-    avgAlpha = (alpha1 * (ionNO / ne) + alpha2 * (ionO2 / ne) + alpha3 * (nN2 / ne))
+    avgAlpha = (alpha1 * (ionNO[i] / ne[i]) + alpha2 * (ionO2[i] / ne[i]) + alpha3 * (nN2[i] / ne[i]))
     # Integrating
     integralNee = integral.cumulative_trapezoid(ionRate - avgAlpha * (ne[i])(ne[i]), time)
     return (integralNee)
