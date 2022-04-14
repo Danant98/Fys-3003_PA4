@@ -38,13 +38,12 @@ ionN = iriFile[:, 10:11]
 t = np.arange(0, 3600, 1) # Time, s
 # Defining the constant ionization-rate
 ionRate = 1E8
-
 # Integrating 
 def solveDiff(h, time):
     """
     Function to solve the differential equation for a given height 'h' and a given time-interval 'time'
 
-    Input 'h' and 'time'
+    Input 'h' with reference height at 100 km and 'time'
     """
     height = height[h]
      # Radiative recombination-rate, (m^3)/s
@@ -56,7 +55,7 @@ def solveDiff(h, time):
     # Defining the average alpha
     avgAlpha = (alpha1 * (ionNO / ne) + alpha2 * (ionO2 / ne) + alpha3 * (nN2 / ne))
     # Integrating
-    integralNee = integral.cumulative_trapezoid(ionRate - avgAlpha * (ne)(ne), t)
+    integralNee = integral.cumulative_trapezoid(ionRate - avgAlpha * (ne)(ne), time)
     return (integralNee)
 
 
