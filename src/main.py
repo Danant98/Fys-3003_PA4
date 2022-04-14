@@ -14,7 +14,7 @@ def openData(filename):
     """
     Function to load in data from file
     """
-    return np.loadtxt(os.path.join("resources", filename), comments="%", dtype=np.float32)
+    return (np.loadtxt(os.path.join("resources", filename), comments="%", dtype=np.float32))
 # Loading data
 msisFile = openData("MSIS.dat")
 iriFile = openData("IRI.dat")
@@ -36,21 +36,29 @@ ionNO = iriFile[:, 8:9]
 ionN = iriFile[:, 10:11]
 # Defining the time using numpy array
 t = np.arange(0, 3600, 1) # Time, s
- # Radiative recombination-rate, (m^3)/s
-radiativeRecRate = 3.7E-18 * (250 / temperature)**(0.7)
-# Defining dissociate recombination reaction rates, (m^3)/s
-alpha1 = 2.1E-13 * (temperature / 300)**(-0.85)
-alpha2 = 1.9E-13 * (temperature / 300)**(-0.5)
-alpha3 = 1.8E-13 * (temperature / 300)**(-0.39)
-# Constant ionization-rate (/m^3/s)
-ionRate = 1E8 
-# Defining the average alpha
-avgAlpha = (alpha1 * (ionNO / ne) + alpha2 * (ionO2 / ne) + alpha3 * (nN2 / ne))
+# Defining the constant ionization-rate
+ionRate = 1E8
+
 # Integrating 
-print(len(avgAlpha))
-print(len(t))
-exit()
-nee = integral.cumulative_trapezoid(ionRate - avgAlpha * (ne)(ne), t)
+def solveDiff(h, time):
+    """
+    Function to solve the differential equation for a given height 'h' and a given time-interval 'time'
+
+    Input 'h' and 'time'
+    """
+    height = height[h]
+     # Radiative recombination-rate, (m^3)/s
+    radiativeRecRate = 3.7E-18 * (250 / electronTemp[height])**(0.7)
+    # Defining dissociate recombination reaction rates, (m^3)/s
+    alpha1 = 2.1E-13 * (electronTemp[height] / 300)**(-0.85)
+    alpha2 = 1.9E-13 * (electronTemp[height] / 300)**(-0.5)
+    alpha3 = 1.8E-13 * (electronTemp[height] / 300)**(-0.39)
+    # Defining the average alpha
+    avgAlpha = (alpha1 * (ionNO / ne) + alpha2 * (ionO2 / ne) + alpha3 * (nN2 / ne))
+    # Integrating
+    integralNee = integral.cumulative_trapezoid(ionRate - avgAlpha * (ne)(ne), t)
+    return (integralNee)
+
 
 
 
