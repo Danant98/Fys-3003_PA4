@@ -39,26 +39,25 @@ t = np.arange(0, 3600, 1) # Time, s
 # Defining the constant ionization-rate
 ionRate = 1E8
 # Integrating 
-def solveDiff(h, time):
+def solveDiff(i, time):
     """
-    Function to solve the differential equation for a given height 'h' and a given time-interval 'time'
+    Function to solve the differential equation for a given height and a given time-interval 'time'
 
-    Input 'h' with reference height at 100 km and 'time'
+    Input 'height' with reference height at 100 km and 'time'
     """
-    height = height[h]
      # Radiative recombination-rate, (m^3)/s
-    radiativeRecRate = 3.7E-18 * (250 / electronTemp[height])**(0.7)
+    radiativeRecRate = 3.7E-18 * (250 / electronTemp[i])**(0.7)
     # Defining dissociate recombination reaction rates, (m^3)/s
-    alpha1 = 2.1E-13 * (electronTemp[height] / 300)**(-0.85)
-    alpha2 = 1.9E-13 * (electronTemp[height] / 300)**(-0.5)
-    alpha3 = 1.8E-13 * (electronTemp[height] / 300)**(-0.39)
+    alpha1 = 2.1E-13 * (electronTemp[i] / 300)**(-0.85)
+    alpha2 = 1.9E-13 * (electronTemp[i] / 300)**(-0.5)
+    alpha3 = 1.8E-13 * (electronTemp[i] / 300)**(-0.39)
     # Defining the average alpha
     avgAlpha = (alpha1 * (ionNO / ne) + alpha2 * (ionO2 / ne) + alpha3 * (nN2 / ne))
     # Integrating
-    integralNee = integral.cumulative_trapezoid(ionRate - avgAlpha * (ne)(ne), time)
+    integralNee = integral.cumulative_trapezoid(ionRate - avgAlpha * (ne[i])(ne[i]), time)
     return (integralNee)
 
-
+print(solveDiff(10, t))
 
 
 
