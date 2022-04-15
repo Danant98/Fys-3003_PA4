@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 # Defining functions to open files containing the data
 def openData(filename):
     """
-    Function to load in data from file
+    Function to load data from files
     """
     return (np.loadtxt(os.path.join("resources", filename), comments="%", dtype=np.float32))
 # Loading data
