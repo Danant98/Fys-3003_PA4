@@ -35,7 +35,7 @@ ionO2 = iriFile[:, 7:8]
 ionNO = iriFile[:, 8:9]
 ionN = iriFile[:, 10:11]
 # Defining the time using numpy array
-t = np.arange(0, 3600, 1) # Time, s
+t = np.asarray(np.arange(0, 3600, 1)) # Time, s
 # Defining the constant ionization-rate
 ionRate = 1E8
 # Integrating 
@@ -54,7 +54,7 @@ def solveDiff(i, time):
     # Defining the average alpha
     avgAlpha = (alpha1 * (ionNO[i] / ne[i]) + alpha2 * (ionO2[i] / ne[i]) + alpha3 * (nN2[i] / ne[i]))
     # Integrating
-    integralNee = integral.cumulative_trapezoid(ionRate - avgAlpha * (ne[i])(ne[i]), time)
+    integralNee = integral.cumulative_trapezoid(ionRate * time - avgAlpha * (ne[i]) * (ne[i]), time)
     return (integralNee)
 
 print(solveDiff(10, t))
