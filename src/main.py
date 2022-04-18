@@ -54,20 +54,20 @@ def solveDiffContinutity(h, time):
     # Defining the average alpha
     avgAlpha = (alpha1 * (ionNO[h] / ne[h]) + alpha2 * (ionO2[h] / ne[h]) + alpha3 * (nN2[h] / ne[h]))
     # Integrating
-    integralNee = integral.cumulative_trapezoid(ionRate * time - avgAlpha * (ne[h]) * (ne[h]), time)
+    integralNee = integral.cumulative_trapezoid(ionRate - avgAlpha * (ne[h]) * (ne[h]), time)
     return (integralNee)
 """
 Solving the continuity equations for two heights; approx 110km and 230km. Both integrated over 3600s.
 Is to be used as a stable background for initial conditions for the different densities.
-"""
+""" 
 # Solving the continuous equations using the function defined above
 height110km = solveDiffContinutity(10, t)
 height230km = solveDiffContinutity(130, t)
 
 # Plot
 plt.plot(height110km, t[:3599])
-plt.show()
+plt.plot(height230km, t[:3599], 'r--')
 
 if __name__ == '__main__':
-    #plt.show()
+    plt.show()
     pass
