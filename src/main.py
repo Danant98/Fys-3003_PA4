@@ -39,7 +39,7 @@ t = np.arange(0, 3601, 1) # Time, s
 # Defining the constant ionization-rate
 ionRate = 1E8
 # Integrating 
-def solveDiff(h, time):
+def solveDiffContinutity(h, time):
     """
     Function to solve the differential equation for a given height 'h' and a given time-interval 'time'
 
@@ -56,8 +56,15 @@ def solveDiff(h, time):
     # Integrating
     integralNee = integral.cumulative_trapezoid(ionRate * time - avgAlpha * (ne[h]) * (ne[h]), time)
     return (integralNee)
+"""
+Solving the continuity equations for two heights; approx 110km and 230km. Both integrated over 3600s.
+Is to be used as a stable background for initial conditions for the different densities.
+"""
+# Solving the continuous equations using the function defined above
+height110km = solveDiffContinutity(10, t)
+height230km = solveDiffContinutity(130, t)
 
-print(solveDiff(10, t))
+
 
 
 
