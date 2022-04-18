@@ -35,7 +35,7 @@ ionO2 = iriFile[:, 7:8]
 ionNO = iriFile[:, 8:9]
 ionN = iriFile[:, 10:11]
 # Defining the time using numpy array
-t = np.arange(0, 3600, 1) # Time, s
+t = np.arange(0, 3601, 1) # Time, s
 # Defining the constant ionization-rate
 ionRate = 1E8
 # Integrating 
