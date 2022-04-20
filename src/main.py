@@ -74,10 +74,6 @@ def solveDiffFor100sIon():
 
     return None
 
-exit()
-# Plot
-plt.plot(height110km, t[:3599])
-plt.plot(height230km, t[:3599], 'r--')
 
 if __name__ == '__main__':
     plt.show()
