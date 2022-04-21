@@ -39,42 +39,22 @@ t = np.linspace(0, 3600, 1) # Time, s
 # Defining the constant ionization-rate
 ionRate = 1E8
 # Integrating 
-def solveDiffContinutity(time):
+def coupledODEforE(initialValues, t):
     """
-    Function to solve the differential equation for a given height 'h' and a given time-interval 'time' used as reference
+    Creating the coupled ODE for E-region     
+    """
 
-    Input 'height' with reference height at 100 km and 'time'
-    """
-     # Radiative recombination-rate, (m^3)/s
-    radiativeRecRate = 3.7E-18 * (250 / electronTemp)**(0.7)
-    # Defining dissociate recombination reaction rates, (m^3)/s
-    alpha1 = 2.1E-13 * (electronTemp / 300)**(-0.85)
-    alpha2 = 1.9E-13 * (electronTemp / 300)**(-0.5)
-    alpha3 = 1.8E-13 * (electronTemp / 300)**(-0.39)
-    # Defining the average alpha
-    avgAlpha = (alpha1 * (ionNO / ne) + alpha2 * (ionO2 / ne) + alpha3 * (nN2 / ne))
-    # Solving ODE
-    fun = ionRate - avgAlpha * (ne) * (ne)
-    odeSolve = odeint(fun, time, height)
-    return (odeSolve)
-"""
-Solving the continuity equations for two heights; approx 110km and 230km. Both integrated over 3600s.
-Is to be used as a stable background for initial conditions for the different densities.
-""" 
-# Solving the continuous equations using the function defined above
-print(solveDiffContinutity(t))
-exit()
-height230km = solveDiffContinutity(t)
-# Solving the continuous equations for ionization-puls over 100s
-def solveDiffFor100sIon():
-    """
-    
-    """
 
 
     return None
 
 
+"""
+Solving the continuity equations for two heights; approx 110km and 230km. Both integrated over 3600s.
+Is to be used as a stable background for initial conditions for the different densities.
+""" 
+
+
+# Running only of this file is runned
 if __name__ == '__main__':
     plt.show()
-    pass
