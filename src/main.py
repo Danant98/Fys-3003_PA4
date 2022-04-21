@@ -7,7 +7,7 @@ Main file for assignment
 import os
 import numpy as np
 import scipy as sp
-import scipy.integrate as integral 
+from scipy.integrate import odeint
 import matplotlib.pyplot as plt
 # Defining functions to open files containing the data
 def openData(filename):
@@ -55,7 +55,7 @@ def solveDiffContinutity(time):
     avgAlpha = (alpha1 * (ionNO / ne) + alpha2 * (ionO2 / ne) + alpha3 * (nN2 / ne))
     # Solving ODE
     fun = ionRate - avgAlpha * (ne) * (ne)
-    odeSolve = integral.odeint(fun, time, height)
+    odeSolve = odeint(fun, time, height)
     return (odeSolve)
 """
 Solving the continuity equations for two heights; approx 110km and 230km. Both integrated over 3600s.
