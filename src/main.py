@@ -41,7 +41,9 @@ ionRate = 1E8
 # Integrating 
 def coupledODEforE(initialValues, t):
     """
-    Creating the coupled ODE for E-region     
+    Creating the coupled ODE for E-region
+
+    Returning the ODE     
     """
     ## Defining constants used
     ionizationRate = 1E8 # Ionization-rate (/m^2/s)
@@ -49,9 +51,11 @@ def coupledODEforE(initialValues, t):
     alpha1 = 2.1E-13 * (electronTemp / 300)**(-0.85) 
     alpha2 = 1.9E-13 * (electronTemp / 300)**(-0.5)
     alpha3 = 1.8E-13 * (electronTemp / 300)**(-0.39)
-
-
-    return None
+    # Defining the in
+    avgAlpha = (alpha1 * (ionNO / ne)) + (alpha2 * (ionO2 / ne)) + (alpha3 * (nN2 / ne))
+    # Defining the ODE for the E-region
+    dndt = ionizationRate - (avgAlpha * (ne)*(ne))
+    return (dndt)
 
 
 """
