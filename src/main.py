@@ -36,23 +36,25 @@ ionNO = iriFile[:, 8:9]
 ionN = iriFile[:, 10:11]
 # Defining the time as a numpy array with spacing 1s
 t = np.linspace(0, 3600, 1) # Time, s
-# Defining the constant ionization-rate
-ionRate = 1E8
+# Defining constants
+ionizationRate = 1E8 # Ionization-rate (/m^2/s)
+# Dissociative recombinations rate (m^3/s)
+alpha1 = 2.1E-13 * (electronTemp / 300)**(-0.85) 
+alpha2 = 1.9E-13 * (electronTemp / 300)**(-0.5)
+alpha3 = 1.8E-13 * (electronTemp / 300)**(-0.39)
+
+
 # Integrating 
-def coupledODEforE(initialValues, t):
+def coupledODEforE(n, t):
     """
     Creating the coupled ODE for E-region
 
     Returning the ODE     
     """
-    ## Defining constants used
-    ionizationRate = 1E8 # Ionization-rate (/m^2/s)
-    # Dissociative recombinations rate (m^3/s)
-    alpha1 = 2.1E-13 * (electronTemp / 300)**(-0.85) 
-    alpha2 = 1.9E-13 * (electronTemp / 300)**(-0.5)
-    alpha3 = 1.8E-13 * (electronTemp / 300)**(-0.39)
-    # Defining the in
+    # Defining the average alpha
     avgAlpha = (alpha1 * (ionNO / ne)) + (alpha2 * (ionO2 / ne)) + (alpha3 * (nN2 / ne))
+    # 
+    A = n
     # Defining the ODE for the E-region
     dndt = ionizationRate - (avgAlpha * (ne)*(ne))
     return (dndt)
