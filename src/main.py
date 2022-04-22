@@ -43,7 +43,12 @@ def coupledODEforE(initialValues, t):
     """
     Creating the coupled ODE for E-region     
     """
-
+    ## Defining constants used
+    ionizationRate = 1E8 # Ionization-rate (/m^2/s)
+    # Dissociative recombinations rate (m^3/s)
+    alpha1 = 2.1E-13 * (electronTemp / 300)**(-0.85) 
+    alpha2 = 1.9E-13 * (electronTemp / 300)**(-0.5)
+    alpha3 = 1.8E-13 * (electronTemp / 300)**(-0.39)
 
 
     return None
