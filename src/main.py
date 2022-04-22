@@ -56,7 +56,7 @@ def coupledODEforE(n, t):
     # 
     A = n
     # Defining the ODE for the E-region
-    dndt = ionizationRate - (avgAlpha * (ne)*(ne))
+    dndt = ionizationRate - (avgAlpha * (A)*(A))
     return (dndt)
 
 
