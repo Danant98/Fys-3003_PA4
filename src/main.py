@@ -53,18 +53,18 @@ def coupledODEforE(n, t):
     """
     # Defining the average alpha
     avgAlpha = (alpha1 * (ionNO / ne)) + (alpha2 * (ionO2 / ne)) + (alpha3 * (nN2 / ne))
-    # 
-    A = n
     # Defining the ODE for the E-region
-    dndt = ionizationRate - (avgAlpha * (A)*(A))
+    dndt = ionizationRate - (avgAlpha * (ne)*(ne))
     return (dndt)
 
+# Defining initial condition
+initialE = ne[0]
 
 """
 Solving the continuity equations for two heights; approx 110km and 230km. Both integrated over 3600s.
 Is to be used as a stable background for initial conditions for the different densities.
 """ 
-
+solvedODEforE = odeint(coupledODEforE, initialE, t)
 
 # Running only of this file is runned
 if __name__ == '__main__':
