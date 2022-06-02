@@ -63,7 +63,7 @@ def odes(x, t, h, qe):
     qOplus = qe * (0.56 * nO) / (0.92*nN2 + nO2 + 0.56*nO)
     qO2plus = qe * (nO2) / (0.92*nN2 + nO2 + 0.56*nO)
 
-    # Assigning each ODE to vectorelement
+    # Assigning each ODE to a vector element
     ne = x[0]
     nOplus = x[1]
     nO2plus = x[2]
