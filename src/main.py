@@ -10,7 +10,7 @@ from scipy.integrate import odeint
 # Opening files
 def openData(filename):
     """
-    Function to load in data from file
+    Function to load data from files
     """
     return np.loadtxt(os.path.join("resources", filename), comments="%", dtype=np.float32)
 
