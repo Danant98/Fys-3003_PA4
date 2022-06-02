@@ -34,9 +34,9 @@ Te = iriFile[:, 3:4] # Electron temperature, K
 Tn = msisFile[:, 5:6] # Neutral temperature, K
 Tr = (Tn + Ti) / 2
 
-def odes(qe=1E8, x):
+def odes(qe=1E8, x, t):
     """
-    
+    Function defining the ODEs
     """
     # Defining reactionrate (m^3/s)
     alpha1 = 2.1E-13 * (Te / 300)**(-0.85)
@@ -58,6 +58,14 @@ def odes(qe=1E8, x):
     qO2plus = qe * (nO2) / (0.92*nN2 + nO2 + 0.56*nO)
     qN2plus = qe * (nN2) / (0.92*nN2 + nO2 + 0.56*nO)
 
+    # Assigning each ODE to vectorelement
+    ne = x[0]
+    nOplus = x[1]
+    nO2plus = x[2]
+    nN2plus = x[3]
+    nNO = x[4]
+    nNOplus = x[5]
+
     # Defining ODEs 
     dne_dt = qe - ne * (alpha1 * nNOplus + alpha2 * nO2plus + alpha3 * nN2plus + alphar * nOplus)
     dOplus_dt = qOplus - nOplus * (k1 * nN2 + k2 * nO2 + alphar * ne)
@@ -66,9 +74,15 @@ def odes(qe=1E8, x):
     dNO_dt = nO2plus * nN2 * k4 - k3 * nNO * nO2plus
     dNOplus_dt = k1 * nOplus * nN2 + k3 * nNO * nO2plus + k4 * nO2plus * nN2 + k5 * nN2plus * nO - nNOplus * alpha1 * ne
 
-    return (dne_dt, dOplus_dt, dO2plus_dt, dN2plus_dt, dNO_dt, dNOplus_dt)
+    return np.array([dne_dt, dOplus_dt, dO2plus_dt, dN2plus_dt, dNO_dt, dNOplus_dt])
 
 # Functions to return initial values
 def initialvalues(index):
+    """
+    Initial values at a given height
+    """
+    return np.array([ne[index], nOplus[index], nO2plus[index], nN2plus[index], nNO[index], nNOplus[index]])
+    
 
-    pass
+
+
