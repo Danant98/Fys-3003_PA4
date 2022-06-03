@@ -13,7 +13,7 @@ def openData(filename):
     """
     Function to load data from files
     """
-    return np.loadtxt(os.path.join("resources", filename), comments="%", dtype=np.float32)
+    return np.loadtxt(os.path.join("resources", filename), comments="%")
 
 # Loading data
 msisFile = openData("MSIS.dat")
@@ -102,9 +102,13 @@ def solveODEs(h, t, qe):
     return solveODE
 
 H110km = solveODEs(10, t, 1E8)
+H170km = solveODEs(70, t, 1E8)
+H230km = solveODEs(130, t , 1E8)
 
 # Plotting functions
-plt.semilogy(t, H110km[:, 0])
-plt.ylim(1E5, 1E13)
+plt.plot(t, H110km[:, :])
+plt.xlabel(r"Time [s]")
+plt.ylabel(r"Density [$m^{-3}$]")
+plt.legend([r"$e^-$", r"$O^{+}$", r"$O_{2}^{+}$", r"$N_{2}^{+}$", r"$NO$", r"$NO^{+}$"])
 plt.show()
 
