@@ -74,19 +74,20 @@ def odes(x, t, h, qe):
     # Defining ODEs 
     dne_dt = qe - ne * (alpha1 * nNOplus + alpha2 * nO2plus + alpha3 * nN2plus + alphar * nOplus)
     dOplus_dt = qOplus - nOplus * (k1 * nN2 + k2 * nO2 + alphar * ne)
-    dO2plus_dt = qO2plus + (k2 * nOplus * nO2 + k6 * nN2plus * nO2 - k3 * nNO * nO2plus - k4 * nN2 * nO2plus)
+    dO2plus_dt = qO2plus + (k2 * nOplus * nO2 + k6 * nN2plus * nO2 - k3 * nNO * nO2plus - k4 * nN2 * nO2plus - alpha2 * nO2plus * ne)
     dN2plus_dt = qN2plus - nN2plus * (alpha3 * ne + k5 * nO + k6 * nO2)
     dNO_dt = (nO2plus * nN2 * k4) - (k3 * nNO * nO2plus)
     dNOplus_dt = (k1 * nOplus * nN2) + (k3 * nNO * nO2plus) + (k4 * nO2plus * nN2) + (k5 * nN2plus * nO) - (nNOplus * alpha1 * ne)
 
-    return np.array([dne_dt, dOplus_dt, dO2plus_dt, dN2plus_dt, dNO_dt, dNOplus_dt], dtype=np.float64).squeeze()
+    return np.array([dne_dt, dOplus_dt, dO2plus_dt, dN2plus_dt, dNO_dt, dNOplus_dt]).squeeze()
+
 
 # Functions to return initial values
 def initialvalues(index):
     """
     Initial values at a given height
     """
-    return [ne[index], Oplus[index], O2plus[index], N2plus, NO, NOplus[index]]
+    return np.array([ne[index], Oplus[index], O2plus[index], N2plus, NO, NOplus[index]], dtype=np.float64)
 
 # Defining time
 t = np.arange(0, 3600, 1)
@@ -96,12 +97,13 @@ def solveODEs(h, t, qe):
     Solving coupled ODEs using odeint function from scipy
     Returning solutions in form of an array
     """
-    solveODE = odeint(odes, initialvalues(h), t, args=(h, qe))
-
+    iv = initialvalues(h)
+    solveODE = odeint(odes, iv, t, args=(h, qe))
     return solveODE
 
 H110km = solveODEs(10, t, 1E8)
 
+# Plotting functions
 plt.semilogy(t, H110km[:, 0])
 plt.ylim(1E5, 1E13)
 plt.show()
