@@ -105,7 +105,7 @@ H110km = solveODEs(10, t, 1E8)
 H170km = solveODEs(70, t, 1E8)
 H230km = solveODEs(130, t , 1E8)
 
-# Plotting functions
+# Plotting functions from 0 to 3600s 
 plt.plot(t, H110km[:, :])
 plt.xlabel(r"Time [s]")
 plt.ylabel(r"Density [$m^{-3}$]")
