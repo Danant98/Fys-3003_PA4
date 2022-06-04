@@ -33,17 +33,26 @@ NO = 0 # Number density NO, m^-3
 ti = iriFile[:, 2:3] # Ion temperature, K
 te = iriFile[:, 3:4] # Electron temperature, K
 tn = msisFile[100:, 5:6] # Neutral temperature, K
-tr = (tn + ti) / 2
+
 # Defining time in seconds
 time = np.arange(0, 4200, 1)
 
 # 
-def odes(x, t, h, changeT=False):
+def odes(x, t, h, htemp=False):
     """
     Function defining the ODEs
     """
-    Te = te[int(h)]
-    Tr = tr[int(h)]
+    # Making if statement to check if we would change the temperature at a given altitude
+    if htemp:
+        if h < 50:
+            Te = te[int(h)] + 1000
+            Tr = (tn[int(h)] + ti[int(h)] + 1000) / 2
+        elif h > 50:
+            Te = te[int(h)] + 2000
+            Tr = (tn[int(h)] + ti[int(h)] + 2000) / 2
+    else:
+        Te = te[int(h)]
+        Tr = (tn[int(h)] + ti[int(h)]) / 2
     nO = O[int(h)]
     nO2 = O2[int(h)]
     nN2 = N2[int(h)]
@@ -60,11 +69,12 @@ def odes(x, t, h, changeT=False):
     k4 = 5E-22
     k5 = 1.4E-16 * (Tr / 300)**(-0.44)
     k6 = 5E-17 * (Tr / 300)**(-0.8)
-    # Defining function to represent the ionization-rate
+
+    # Defining function to represent the ionization-rate for electrons
     def ion_rate(t):
         """
         Function to represent the ionization-rate over some time interval. (/m^3/s)
-        R eturns the ionization-rate for the given interval
+        Returns the ionization-rate for the given interval
         """
         if t < 3600:
             return 1E8
@@ -106,13 +116,13 @@ def initialvalues(index):
     """
     return np.array([ne[index], Oplus[index], O2plus[index], N2plus, NO, NOplus[index]], dtype=np.float64)
 
-def solveODEs(h, t):
+def solveODEs(h, t, htemp=False):
     """
     Solving coupled ODEs using odeint function from scipy
     Returning solutions in form of an array
     """
     iv = initialvalues(h)
-    solveODE = odeint(odes, iv, t, args=(h,))
+    solveODE = odeint(odes, iv, t, args=(h, htemp))
     return solveODE
 
 # Running function for three different heights 
@@ -143,31 +153,79 @@ fig.suptitle(r"Densities for constant ionization-rate of $1\cdot 10^{8} (/m^{3}/
 fig.tight_layout()
 
 # 
-ionrateH110km = solveODEs(10, time[3600:])
-ionrateH170km = solveODEs(70, time[3600:])
-ionrateH230km = solveODEs(130, time[3600:])
+ionrateH110km = solveODEs(10, time)
+ionrateH170km = solveODEs(70, time)
+ionrateH230km = solveODEs(130, time)
 
 # Plotting for variable ionization-rate from 3600s to 4200s
 fig1, ax1 = plt.subplots(1, 3, sharey=True)
 # Plotting for height 110km
-ax1[0].plot(time[3600:], ionrateH110km[:, :])
+ax1[0].plot(time[3600:], ionrateH110km[3600:, :])
 ax1[0].set_xlabel(r"Time [s]")
 ax1[0].set_ylabel(r"Density [$m^{-3}$]")
 ax1[0].set_title(r"Height 110km")
 ax1[0].legend([r"$e^-$", r"$O^{+}$", r"$O_{2}^{+}$", r"$N_{2}^{+}$", r"$NO$", r"$NO^{+}$"])
 # Plotting for height 170km 
-ax1[1].plot(time[3600:], ionrateH170km[:, :])
+ax1[1].plot(time[3600:], ionrateH170km[3600:, :])
 ax1[1].set_xlabel(r"Time [s]")
 ax1[1].set_title(r"Height 170km")
 ax1[1].legend([r"$e^-$", r"$O^{+}$", r"$O_{2}^{+}$", r"$N_{2}^{+}$", r"$NO$", r"$NO^{+}$"])
 # Plotting for height 230km
-ax1[2].plot(time[3600:], ionrateH230km[:, :])
+ax1[2].plot(time[3600:], ionrateH230km[3600:, :])
 ax1[2].set_xlabel(r"Time [s]")
 ax1[2].set_title(r"Height 230km")
 ax1[2].legend([r"$e^-$", r"$O^{+}$", r"$O_{2}^{+}$", r"$N_{2}^{+}$", r"$NO$", r"$NO^{+}$"])
 # Figure layout
 fig1.suptitle("Densities for changing ionization-rate")
 fig1.tight_layout()
+
+# Higher electron and ion temperature
+hightTemp110km = solveODEs(10, time, True)
+hightTemp170km = solveODEs(70, time, True)
+hightTemp230km = solveODEs(130, time, True)
+
+# Plotting the densites for higher electron and ion tempperature
+fig2, ax2 = plt.subplots(1, 3, sharey=True)
+# Plotting for height 110km
+ax2[0].plot(time[3600:], hightTemp110km[3600:, :])
+ax2[0].set_xlabel(r"Time [s]")
+ax2[0].set_ylabel(r"Density [$m^{-3}$]")
+ax2[0].set_title(r"Height 110km")
+ax2[0].legend([r"$e^-$", r"$O^{+}$", r"$O_{2}^{+}$", r"$N_{2}^{+}$", r"$NO$", r"$NO^{+}$"])
+# Plotting for height 170km
+ax2[1].plot(time[3600:], hightTemp170km[3600:, :])
+ax2[1].set_xlabel(r"Time [s]")
+ax2[1].set_title(r"Height 170km")
+ax2[1].legend([r"$e^-$", r"$O^{+}$", r"$O_{2}^{+}$", r"$N_{2}^{+}$", r"$NO$", r"$NO^{+}$"])
+# Plotting for height 230km
+ax2[2].plot(time[3600:], hightTemp230km[3600:, :])
+ax2[2].set_xlabel(r"Time [s]")
+ax2[2].set_title(r"Height 230km")
+ax2[2].legend([r"$e^-$", r"$O^{+}$", r"$O_{2}^{+}$", r"$N_{2}^{+}$", r"$NO$", r"$NO^{+}$"])
+# Figure layout
+fig2.suptitle(r"Densities for changing ionization-rate, higher e- and i-temperature")
+fig2.tight_layout()
+
+# Defining functions for alpha and beta decay
+def alpha_decay(h, t):
+    """
+    Function to calculate the alpha-decay of electron density
+    """
+    # Finding initial values for a given height
+    Te = te[int(h)]
+    NE = ne[int(h)]
+    noplus = NOplus[int(h)]
+    o2plus = O2plus[int(h)]
+    n2plus = N2plus[int(h)]
+    # Defining varables for alphabar
+    alpha1 = 2.1E-13 * (Te / 300)**(-0.85)
+    alpha2 = 1.9E-13 * (Te / 300)**(-0.5)
+    alpha3 = 1.8E-13 * (Te / 300)**(-0.39)
+    alphabar = alpha1*(noplus/NE) + alpha2*(o2plus/NE) + alpha3*(n2plus/NE)
+    # Expression for ne as a function of time
+    E = NE/(1 + alphabar*NE*t)
+    return E
+
 
 if __name__ == "__main__":
     plt.show()
