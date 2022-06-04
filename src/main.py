@@ -228,7 +228,7 @@ def alpha_decay(x, h, t):
     E = NE/(1 + alphabar*NE*t)
     return E
 
-def beta_decay(h, x, t):
+def beta_decay(x, h, t):
     """
     Function to calculate the beta decay for electron density
     """
@@ -241,6 +241,22 @@ def beta_decay(h, x, t):
     # Function for electron density 
     func = NE*np.exp(-beta*t)
     return func
+
+# Running function for alpha and beta decay
+alphaH110km = alpha_decay(ionrateH110km, 10, decay_time)
+alphaH230km = alpha_decay(ionrateH230km, 130, decay_time)
+betaH110km = beta_decay(ionrateH110km, 10, decay_time)
+betaH230km = beta_decay(ionrateH230km, 130, decay_time)
+
+# Plotting the alpha and beta decay with the electron density decay (Linear)
+fig3, ax3 = plt.subplots(1, 2, sharey=True)
+# Plotting for height 110km
+ax3[0].plot(decay_time, alphaH110km)
+ax3[0].plot(decay_time, betaH110km)
+ax3[0].plot(decay_time, ionrateH110km[3700:, 0], '-')
+ax3[0].legend(["alpha decay", "beta decay", "Electron-density decay"])
+# Plotting for height 230km
+ax3[1].plot(decay_time, alphaH230km)
 
 
 if __name__ == "__main__":
