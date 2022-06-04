@@ -36,8 +36,10 @@ tn = msisFile[100:, 5:6] # Neutral temperature, K
 
 # Defining time in seconds
 time = np.arange(0, 4200, 1)
+# Decay time
+decay_time = np.arange(0, 500, 1)
 
-# 
+# Defining a function containg our ODEs
 def odes(x, t, h, htemp=False):
     """
     Function defining the ODEs
@@ -152,7 +154,7 @@ ax[2].legend([r"$e^-$", r"$O^{+}$", r"$O_{2}^{+}$", r"$N_{2}^{+}$", r"$NO$", r"$
 fig.suptitle(r"Densities for constant ionization-rate of $1\cdot 10^{8} (/m^{3}/s)$")
 fig.tight_layout()
 
-# 
+# Changing ionozation-rate
 ionrateH110km = solveODEs(10, time)
 ionrateH170km = solveODEs(70, time)
 ionrateH230km = solveODEs(130, time)
@@ -207,16 +209,16 @@ fig2.suptitle(r"Densities for changing ionization-rate, higher e- and i-temperat
 fig2.tight_layout()
 
 # Defining functions for alpha and beta decay
-def alpha_decay(h, t):
+def alpha_decay(x, h, t):
     """
     Function to calculate the alpha-decay of electron density
     """
     # Finding initial values for a given height
     Te = te[int(h)]
-    NE = ne[int(h)]
-    noplus = NOplus[int(h)]
-    o2plus = O2plus[int(h)]
-    n2plus = N2plus[int(h)]
+    NE = x[3700, 0]
+    noplus = x[3700, 5]
+    o2plus = x[3700, 2]
+    n2plus = x[3700, 3]
     # Defining varables for alphabar
     alpha1 = 2.1E-13 * (Te / 300)**(-0.85)
     alpha2 = 1.9E-13 * (Te / 300)**(-0.5)
@@ -225,6 +227,20 @@ def alpha_decay(h, t):
     # Expression for ne as a function of time
     E = NE/(1 + alphabar*NE*t)
     return E
+
+def beta_decay(h, x, t):
+    """
+    Function to calculate the beta decay for electron density
+    """
+    Tr = (tn[int(h)] + ti[int(h)]) / 2
+    o2 = O2[int(h)]
+    k2 = 2E-17 * (Tr / 300)**(-0.4)
+    NE = x[3700, 0]
+    # Defining beta
+    beta = k2*o2
+    # Function for electron density 
+    func = NE*np.exp(-beta*t)
+    return func
 
 
 if __name__ == "__main__":
