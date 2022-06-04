@@ -34,8 +34,11 @@ ti = iriFile[:, 2:3] # Ion temperature, K
 te = iriFile[:, 3:4] # Electron temperature, K
 tn = msisFile[100:, 5:6] # Neutral temperature, K
 tr = (tn + ti) / 2
+# Defining time in seconds
+time = np.arange(0, 4200, 1)
 
-def odes(x, t, h, qe):
+# 
+def odes(x, t, h, changeT=False):
     """
     Function defining the ODEs
     """
@@ -57,6 +60,20 @@ def odes(x, t, h, qe):
     k4 = 5E-22
     k5 = 1.4E-16 * (Tr / 300)**(-0.44)
     k6 = 5E-17 * (Tr / 300)**(-0.8)
+    # Defining function to represent the ionization-rate
+    def ion_rate(t):
+        """
+        Function to represent the ionization-rate over some time interval. (/m^3/s)
+        R eturns the ionization-rate for the given interval
+        """
+        if t < 3600:
+            return 1E8
+        elif t >= 3600 and t <= 3700:
+            return 1E10
+        else:
+            return 0
+
+    qe = ion_rate(t)
 
     # Defining ionization-rate (/m^3/s)
     qN2plus = qe * (0.92 * nN2) / (0.92*nN2 + nO2 + 0.56*nO)
@@ -89,68 +106,68 @@ def initialvalues(index):
     """
     return np.array([ne[index], Oplus[index], O2plus[index], N2plus, NO, NOplus[index]], dtype=np.float64)
 
-# Defining time in seconds
-t = np.arange(0, 4200, 1)
-
-# Defining function to represent the ionization-rate
-def ion_rate(t):
-    """
-    Function to represent the ionization-rate over some time interval. (/m^3/s)
-
-    Returns the ionization-rate for the given interval
-    """
-    for i in t:
-        if i < 3600:
-            return 1E8
-        elif i >= 3600 and i <= 3700:
-            return 1E10
-        else:
-            return 0
-
-def solveODEs(h, t, qe):
+def solveODEs(h, t):
     """
     Solving coupled ODEs using odeint function from scipy
     Returning solutions in form of an array
     """
     iv = initialvalues(h)
-    solveODE = odeint(odes, iv, t, args=(h, qe))
+    solveODE = odeint(odes, iv, t, args=(h,))
     return solveODE
 
-# Running 
-H110km = solveODEs(10, t[:3600], ion_rate(t[:3600]))
-H170km = solveODEs(70, t[:3600],ion_rate(t[:3600]))
-H230km = solveODEs(130, t[:3600] , ion_rate(t[:3600]))
+# Running function for three different heights 
+H110km = solveODEs(10, time[:3600])
+H170km = solveODEs(70, time[:3600])
+H230km = solveODEs(130, time[:3600])
 
 # Plotting functions from 0 to 3600s 
 fig, ax = plt.subplots(1, 3, sharey=True)
 # Plotting for height 110km
-ax[0].plot(t[:3600], H110km[:, :])
+ax[0].plot(time[:3600], H110km[:, :])
 ax[0].set_ylabel(r"Density [$m^{-3}$]")
 ax[0].set_xlabel(r"Time [s]")
 ax[0].set_title(r"Height 110km")
 ax[0].legend([r"$e^-$", r"$O^{+}$", r"$O_{2}^{+}$", r"$N_{2}^{+}$", r"$NO$", r"$NO^{+}$"])
 # Plotting for height 170km
-ax[1].plot(t[:3600], H170km[:, :])
+ax[1].plot(time[:3600], H170km[:, :])
 ax[1].set_xlabel(r"Time [s]")
 ax[1].set_title(r"Height 170km")
 ax[1].legend([r"$e^-$", r"$O^{+}$", r"$O_{2}^{+}$", r"$N_{2}^{+}$", r"$NO$", r"$NO^{+}$"])
 # Plotting for height 230km
-ax[2].plot(t[:3600], H230km[:, :])
+ax[2].plot(time[:3600], H230km[:, :])
 ax[2].set_xlabel(r"Time [s]")
 ax[2].set_title(r"Height 230km")
 ax[2].legend([r"$e^-$", r"$O^{+}$", r"$O_{2}^{+}$", r"$N_{2}^{+}$", r"$NO$", r"$NO^{+}$"])
-
-fig.suptitle(r"Densities for a constant ionization-rate of $1\cdot 10^{8} (/m^{3}/s)$")
+# Figure layout
+fig.suptitle(r"Densities for constant ionization-rate of $1\cdot 10^{8} (/m^{3}/s)$")
 fig.tight_layout()
-    
+
 # 
-ionrateH110km = solveODEs(10, t[3600:], ion_rate(t[3600:]))
-ionrate170km = solveODEs(70, t[3600:], ion_rate(t[3600:]))
-ionrate230km = solveODEs(130, t[3600:], ion_rate(t[3600:]))
+ionrateH110km = solveODEs(10, time[3600:])
+ionrateH170km = solveODEs(70, time[3600:])
+ionrateH230km = solveODEs(130, time[3600:])
 
-# Plotting for variable ionization-rate
-fig1, ax1 = plt.subplots()
-
+# Plotting for variable ionization-rate from 3600s to 4200s
+fig1, ax1 = plt.subplots(1, 3, sharey=True)
+# Plotting for height 110km
+ax1[0].plot(time[3600:], ionrateH110km[:, :])
+ax1[0].set_xlabel(r"Time [s]")
+ax1[0].set_ylabel(r"Density [$m^{-3}$]")
+ax1[0].set_title(r"Height 110km")
+ax1[0].legend([r"$e^-$", r"$O^{+}$", r"$O_{2}^{+}$", r"$N_{2}^{+}$", r"$NO$", r"$NO^{+}$"])
+# Plotting for height 170km 
+ax1[1].plot(time[3600:], ionrateH170km[:, :])
+ax1[1].set_xlabel(r"Time [s]")
+ax1[1].set_title(r"Height 170km")
+ax1[1].legend([r"$e^-$", r"$O^{+}$", r"$O_{2}^{+}$", r"$N_{2}^{+}$", r"$NO$", r"$NO^{+}$"])
+# Plotting for height 230km
+ax1[2].plot(time[3600:], ionrateH230km[:, :])
+ax1[2].set_xlabel(r"Time [s]")
+ax1[2].set_title(r"Height 230km")
+ax1[2].legend([r"$e^-$", r"$O^{+}$", r"$O_{2}^{+}$", r"$N_{2}^{+}$", r"$NO$", r"$NO^{+}$"])
+# Figure layout
+fig1.suptitle("Densities for changing ionization-rate")
+fig1.tight_layout()
 
 if __name__ == "__main__":
     plt.show()
