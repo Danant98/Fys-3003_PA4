@@ -143,5 +143,7 @@ def ion_rate(t):
 
 
 
-plt.show()
+if __name__ == "__main__":
+    plt.show()
 
+    
