@@ -251,12 +251,24 @@ betaH230km = beta_decay(ionrateH230km, 130, decay_time)
 # Plotting the alpha and beta decay with the electron density decay (Linear)
 fig3, ax3 = plt.subplots(1, 2, sharey=True)
 # Plotting for height 110km
-ax3[0].plot(decay_time, alphaH110km)
-ax3[0].plot(decay_time, betaH110km)
-ax3[0].plot(decay_time, ionrateH110km[3700:, 0], '-')
+ax3[0].plot(time[3700:], alphaH110km)
+ax3[0].plot(time[3700:], betaH110km)
+ax3[0].plot(time[3700:], ionrateH110km[3700:, 0], linestyle='--', color='red')
 ax3[0].legend(["alpha decay", "beta decay", "Electron-density decay"])
 # Plotting for height 230km
-ax3[1].plot(decay_time, alphaH230km)
+ax3[1].plot(time[3700:], alphaH230km)
+ax3[1].plot(time[3700:], betaH230km)
+ax3[1].plot(time[3700:], ionrateH230km[3700:, 0], linestyle='--', color='red')
+# Format figure
+fig3.suptitle(r"Comparison of alpha, beta and found decay for electron density (Linear)")
+fig.tight_layout()
+
+# Plotting the alpha and beta decay with the electron density decay (Semilog)
+figlog, axlog = plt.subplots(1, 2, sharey=True)
+# Plotting for height 110km
+axlog[0].semilogy(time[3700:], alphaH110km)
+axlog[0].semilogy(time[3700:], betaH110km)
+axlog[0].semilogy(time[3700:], ionrateH110km[3700:, 0])
 
 
 if __name__ == "__main__":
