@@ -91,16 +91,16 @@ def odes(x, t, h, htemp=False, sinusoidal=False):
         Returns the ionization-rate for the given interval
         """
         qehat = 2E10
-        if t < 3600:
+        if t <= 3600:
             return 1E8
-        elif t >= 3600 and t <= 3700:
+        elif t > 3600 and t <= 3700:
             return qehat*(np.sin(2*np.pi*t/20))**2
         else:
             return 0
 
     # Changing ionozation-rate 
     if sinusoidal:
-        sinusoidal_ionrate(t)
+        qe = sinusoidal_ionrate(t)
     else:
         qe = ion_rate(t)
 
@@ -135,13 +135,13 @@ def initialvalues(index):
     """
     return np.array([ne[index], Oplus[index], O2plus[index], N2plus, NO, NOplus[index]], dtype=np.float64)
 
-def solveODEs(h, t, htemp=False):
+def solveODEs(h, t, htemp=False, sinusoidal=False):
     """
     Solving coupled ODEs using odeint function from scipy
     Returning solutions in form of an array
     """
     iv = initialvalues(h)
-    solveODE = odeint(odes, iv, t, args=(h, htemp))
+    solveODE = odeint(odes, iv, t, args=(h, htemp, sinusoidal))
     return solveODE
 
 # Running function for three different heights 
@@ -271,11 +271,17 @@ fig3, ax3 = plt.subplots(1, 2, sharey=True)
 ax3[0].plot(time[3700:], alphaH110km)
 ax3[0].plot(time[3700:], betaH110km)
 ax3[0].plot(time[3700:], ionrateH110km[3700:, 0], linestyle='--', color='red')
+ax3[0].set_xlabel(r"Time [s]")
+ax3[0].set_ylabel(r"Electron density $n_e$ [$m^{-3}$]")
+ax3[0].set_title(r"Height 110km")
 ax3[0].legend(["alpha decay", "beta decay", "regular decay"])
 # Plotting for height 230km
 ax3[1].plot(time[3700:], alphaH230km)
 ax3[1].plot(time[3700:], betaH230km)
 ax3[1].plot(time[3700:], ionrateH230km[3700:, 0], linestyle='--', color='red')
+ax3[1].set_xlabel(r"Time [s]")
+ax3[1].set_title(r"Height 230km")
+ax3[1].legend(["alpha decay", "beta decay", "regular decay"])
 # Format figure
 fig3.suptitle(r"Comparison of alpha, beta and found decay for electron density (Linear)")
 fig.tight_layout()
@@ -285,8 +291,61 @@ figlog, axlog = plt.subplots(1, 2, sharey=True)
 # Plotting for height 110km
 axlog[0].semilogy(time[3700:], alphaH110km)
 axlog[0].semilogy(time[3700:], betaH110km)
-axlog[0].semilogy(time[3700:], ionrateH110km[3700:, 0])
+axlog[0].semilogy(time[3700:], ionrateH110km[3700:, 0], linestyle='--', color='r')
+axlog[0].set_xlabel(r"Time [s]")
+axlog[0].set_ylabel(r"Electron density $n_e$ [$m^{-3}$]")
+axlog[0].set_title(r"Height 110km")
+axlog[0].legend(["alpha decay", "beta decay", "regular decay"])
+# Plotting for height 230km
+axlog[1].semilogy(time[3700:], alphaH230km)
+axlog[1].semilogy(time[3700:], betaH230km)
+axlog[1].semilogy(time[3700:], ionrateH230km[3700:, 0], linestyle='--', color='red')
+axlog[1].set_xlabel(r"Time [s]")
+axlog[1].set_title(r"Height 230km")
+axlog[1].legend(["alpha decay", "beta decay", "regular decay"])
+plt.ylim(1E10, 1E12)
+# Figure format
+figlog.suptitle(r"Comparison of alpha, beta and found decay for electron density (semilog)")
+figlog.tight_layout()
 
+# Sinusoidal ionization-rate
+sinusoidalH110km = solveODEs(10, time, sinusoidal=True)
+sinusoidalH120km = solveODEs(20, time, sinusoidal=True)
+sinusoidalH170km = solveODEs(70, time, sinusoidal=True)
+sinusoidalH230km = solveODEs(130, time, sinusoidal=True)
+
+# Plotting with sinusoidal ionization-rate
+figs, axs = plt.subplots(1, 2, sharey=True)
+# Plotting for height 110km
+axs[0].plot(time[3600:], sinusoidalH110km[3600:])
+axs[0].set_xlabel(r"Time [s]")
+axs[0].set_ylabel(r"Density [$m^{-3}$]")
+axs[0].set_title(r"Height 110km")
+axs[0].legend([r"$e^-$", r"$O^{+}$", r"$O_{2}^{+}$", r"$N_{2}^{+}$", r"$NO$", r"$NO^{+}$"])
+# Plotting for height 120km
+axs[1].plot(time[3600:], sinusoidalH120km[3600:])
+axs[1].set_xlabel(r"Time [s]")
+axs[1].set_title(r"Height 120km")
+axs[1].legend([r"$e^-$", r"$O^{+}$", r"$O_{2}^{+}$", r"$N_{2}^{+}$", r"$NO$", r"$NO^{+}$"])
+# Format figure
+figs.suptitle(r"Sinusoidal ionization-rate (110km and 120km)")
+figs.tight_layout()
+#
+figs1, axs1 = plt.subplots(1, 2, sharey=True)
+# Plotting for height 170km
+axs1[0].plot(time[3600:], sinusoidalH170km[3600:])
+axs1[0].set_xlabel(r"Time [s]")
+axs1[0].set_ylabel(r"Density [$m^{-3}$]")
+axs1[0].set_title(r"Height 170km")
+axs1[0].legend([r"$e^-$", r"$O^{+}$", r"$O_{2}^{+}$", r"$N_{2}^{+}$", r"$NO$", r"$NO^{+}$"])
+# Plotting for height 230km
+axs1[1].plot(time[3600:], sinusoidalH230km[3600:])
+axs1[1].set_xlabel(r"Time [s]")
+axs1[1].set_title(r"Height 230km")
+axs1[1].legend([r"$e^-$", r"$O^{+}$", r"$O_{2}^{+}$", r"$N_{2}^{+}$", r"$NO$", r"$NO^{+}$"])
+# Format figure
+figs1.suptitle(r"Sinusoidal ionization-rate (170km and 230km)")
+figs1.tight_layout()
 
 if __name__ == "__main__":
     plt.show()
