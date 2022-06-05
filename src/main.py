@@ -40,7 +40,7 @@ time = np.arange(0, 4200, 1)
 decay_time = np.arange(0, 500, 1)
 
 # Defining a function containg our ODEs
-def odes(x, t, h, htemp=False):
+def odes(x, t, h, htemp=False, sinusoidal=False):
     """
     Function defining the ODEs
     """
@@ -84,8 +84,25 @@ def odes(x, t, h, htemp=False):
             return 1E10
         else:
             return 0
+    
+    def sinusoidal_ionrate(t):
+        """
+        Function to represent the ionization-rate for a sinusoidal ionization-rate. (/m^3/s)
+        Returns the ionization-rate for the given interval
+        """
+        qehat = 2E10
+        if t < 3600:
+            return 1E8
+        elif t >= 3600 and t <= 3700:
+            return qehat*(np.sin(2*np.pi*t/20))**2
+        else:
+            return 0
 
-    qe = ion_rate(t)
+    # Changing ionozation-rate 
+    if sinusoidal:
+        sinusoidal_ionrate(t)
+    else:
+        qe = ion_rate(t)
 
     # Defining ionization-rate (/m^3/s)
     qN2plus = qe * (0.92 * nN2) / (0.92*nN2 + nO2 + 0.56*nO)
@@ -254,7 +271,7 @@ fig3, ax3 = plt.subplots(1, 2, sharey=True)
 ax3[0].plot(time[3700:], alphaH110km)
 ax3[0].plot(time[3700:], betaH110km)
 ax3[0].plot(time[3700:], ionrateH110km[3700:, 0], linestyle='--', color='red')
-ax3[0].legend(["alpha decay", "beta decay", "Electron-density decay"])
+ax3[0].legend(["alpha decay", "beta decay", "regular decay"])
 # Plotting for height 230km
 ax3[1].plot(time[3700:], alphaH230km)
 ax3[1].plot(time[3700:], betaH230km)
