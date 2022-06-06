@@ -317,32 +317,34 @@ sinusoidalH230km = solveODEs(130, time, sinusoidal=True)
 # Plotting with sinusoidal ionization-rate
 figs, axs = plt.subplots(1, 2, sharey=True)
 # Plotting for height 110km
-axs[0].plot(time[3600:], sinusoidalH110km[3600:])
+axs[0].semilogy(time[3600:], sinusoidalH110km[3600:])
 axs[0].set_xlabel(r"Time [s]")
 axs[0].set_ylabel(r"Density [$m^{-3}$]")
 axs[0].set_title(r"Height 110km")
 axs[0].legend([r"$e^-$", r"$O^{+}$", r"$O_{2}^{+}$", r"$N_{2}^{+}$", r"$NO$", r"$NO^{+}$"])
 # Plotting for height 120km
-axs[1].plot(time[3600:], sinusoidalH120km[3600:])
+axs[1].semilogy(time[3600:], sinusoidalH120km[3600:])
 axs[1].set_xlabel(r"Time [s]")
 axs[1].set_title(r"Height 120km")
 axs[1].legend([r"$e^-$", r"$O^{+}$", r"$O_{2}^{+}$", r"$N_{2}^{+}$", r"$NO$", r"$NO^{+}$"])
+plt.ylim(bottom=1E4)
 # Format figure
 figs.suptitle(r"Sinusoidal ionization-rate (110km and 120km)")
 figs.tight_layout()
 #
 figs1, axs1 = plt.subplots(1, 2, sharey=True)
 # Plotting for height 170km
-axs1[0].plot(time[3600:], sinusoidalH170km[3600:])
+axs1[0].semilogy(time[3600:], sinusoidalH170km[3600:])
 axs1[0].set_xlabel(r"Time [s]")
 axs1[0].set_ylabel(r"Density [$m^{-3}$]")
 axs1[0].set_title(r"Height 170km")
 axs1[0].legend([r"$e^-$", r"$O^{+}$", r"$O_{2}^{+}$", r"$N_{2}^{+}$", r"$NO$", r"$NO^{+}$"])
 # Plotting for height 230km
-axs1[1].plot(time[3600:], sinusoidalH230km[3600:])
+axs1[1].semilogy(time[3600:], sinusoidalH230km[3600:])
 axs1[1].set_xlabel(r"Time [s]")
 axs1[1].set_title(r"Height 230km")
 axs1[1].legend([r"$e^-$", r"$O^{+}$", r"$O_{2}^{+}$", r"$N_{2}^{+}$", r"$NO$", r"$NO^{+}$"])
+plt.ylim(bottom=1E6)
 # Format figure
 figs1.suptitle(r"Sinusoidal ionization-rate (170km and 230km)")
 figs1.tight_layout()
